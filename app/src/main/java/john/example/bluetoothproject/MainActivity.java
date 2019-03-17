@@ -18,4 +18,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void launchImages(View view) {
+        Intent intent = new Intent(this, Image.class);
+        startActivity(intent);
+    }
 }
