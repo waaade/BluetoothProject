@@ -15,10 +15,15 @@ import android.widget.ImageView;
 
 import java.io.FileDescriptor;
 
+/**
+ * Loads an image from phone storage and loads it onto the screen.
+ * Will be able to share image files to other phones via bluetooth
+ */
 public class Image extends AppCompatActivity {
 
     private static final int READ_REQUEST_CODE = 42;
     private static final String TAG = "Image";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +52,10 @@ public class Image extends AppCompatActivity {
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
+    /**
+     * Loads all of the image files in the phone storage and displays them.
+     * Sends the chosen image to the getBitmapFromUri class to load the image
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode,
                                  Intent resultData) {
@@ -69,7 +78,16 @@ public class Image extends AppCompatActivity {
         }
     }
 
+    /**
+     * Loads a uri image file and converts it into a bitmap so the app can load it
+     */
     private class getBitmapFromUri extends AsyncTask<Uri, Void, Bitmap> {
+        /**
+         * Converts a uri file into a bitmap file
+         *
+         * @param uri the uri image file that will be converted
+         * @return a bitmap image
+         */
         protected Bitmap doInBackground(Uri... uri) {
             Bitmap image;
             try {
@@ -86,6 +104,11 @@ public class Image extends AppCompatActivity {
             return null;
         }
 
+        /**
+         * loads a bitmap image to the app screen
+         *
+         * @param bm image to be loaded to the screen
+         */
         protected void onPostExecute(Bitmap bm) {
             ImageView iv = findViewById(R.id.imageView);
             iv.setImageBitmap(bm);
