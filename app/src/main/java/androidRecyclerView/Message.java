@@ -1,5 +1,9 @@
 package androidRecyclerView;
 
+/**
+ * Message
+ * A class representing a message sent between devices.
+ */
 public class Message {
 
     protected int id;

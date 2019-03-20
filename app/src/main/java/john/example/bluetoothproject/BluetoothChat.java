@@ -24,7 +24,10 @@ import java.util.List;
 
 import androidRecyclerView.MessageAdapter;
 
-
+/**
+ * BluetoothChat
+ * A chat Activity.
+ */
 public class BluetoothChat extends Activity {
 
     // Message types sent from the BluetoothChatService Handler
