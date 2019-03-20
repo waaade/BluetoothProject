@@ -70,7 +70,7 @@ public class BluetoothChat extends Activity {
 
         setContentView(R.layout.activity_chat);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        mRecyclerView = findViewById(R.id.my_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -109,12 +109,12 @@ public class BluetoothChat extends Activity {
     }
 
     private void setupChat() {
-        mOutEditText = (EditText) findViewById(R.id.edit_text_out);
+        mOutEditText = findViewById(R.id.edit_text_out);
         mOutEditText.setOnEditorActionListener(mWriteListener);
-        mSendButton = (Button) findViewById(R.id.button_send);
+        mSendButton = findViewById(R.id.button_send);
         mSendButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                TextView view = (TextView) findViewById(R.id.edit_text_out);
+                TextView view = findViewById(R.id.edit_text_out);
                 String message = view.getText().toString();
                 sendMessage(message);
             }
