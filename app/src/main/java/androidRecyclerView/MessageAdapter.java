@@ -28,7 +28,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         public ViewHolder(LinearLayout v) {
             super(v);
-            mTextView = (TextView) v.findViewById(R.id.text);
+            mTextView = v.findViewById(R.id.text);
         }
     }
 

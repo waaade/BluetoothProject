@@ -1,6 +1,7 @@
 package john.example.bluetoothproject;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,25 +10,61 @@ import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.FileDescriptor;
+import java.util.ArrayList;
+import java.util.List;
+
+import androidRecyclerView.ImageAdapter;
 
 /**
  * Loads an image from phone storage and loads it onto the screen.
  * Will be able to share image files to other phones via bluetooth
  */
-public class Image extends AppCompatActivity {
+public class ImageTransfer extends AppCompatActivity {
 
     private static final int READ_REQUEST_CODE = 42;
     private static final String TAG = "Image";
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLayoutManager;
+    private ImageAdapter mAdapter;
+
+    // Local Bluetooth adapter
+    private BluetoothAdapter mBluetoothAdapter = null;
+
+    public Uri previewImage = null;
+    public int counter = 0;
+
+    private List imageList = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image);
+        setContentView(R.layout.activity_image_transfer);
+
+        mRecyclerView = findViewById(R.id.image_recycle_view);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new ImageAdapter(getBaseContext(), imageList);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        // If the adapter is null, then Bluetooth is not supported
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
     }
 
     /**
@@ -69,11 +106,13 @@ public class Image extends AppCompatActivity {
             // Instead, a URI to that document will be contained in the return intent
             // provided to this method as a parameter.
             // Pull that URI using resultData.getData().
-            Uri uri = null;
+            //Uri uri = null;
             if (resultData != null) {
-                uri = resultData.getData();
-                Log.i(TAG, "Uri: " + uri.toString());
-                new getBitmapFromUri().execute(uri);
+                previewImage = resultData.getData();
+                Log.i(TAG, "Uri: " + previewImage.toString());
+                //new getBitmapFromUri().execute(uri);
+                ImageView iv = findViewById(R.id.image);
+                iv.setImageURI(previewImage);
             }
         }
     }
@@ -110,8 +149,17 @@ public class Image extends AppCompatActivity {
          * @param bm image to be loaded to the screen
          */
         protected void onPostExecute(Bitmap bm) {
-            ImageView iv = findViewById(R.id.imageView);
+            ImageView iv = findViewById(R.id.image);
             iv.setImageBitmap(bm);
         }
     }
+
+    public void sendImage(View view) {
+        mAdapter.notifyDataSetChanged();
+        imageList.add(new androidRecyclerView.Image(counter++, previewImage, "Me"));
+        previewImage = null;
+        ImageView iv = findViewById(R.id.image);
+        iv.setImageURI(null);
+    }
 }
+

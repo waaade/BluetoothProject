@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void launchImages(View view) {
-        Intent intent = new Intent(this, Image.class);
+        Intent intent = new Intent(this, ImageTransfer.class);
         startActivity(intent);
     }
 }
