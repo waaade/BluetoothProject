@@ -22,4 +22,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ImageTransfer.class);
         startActivity(intent);
     }
+
+    public void launchTransferFile(View view){
+        Intent intent = new Intent(this, FileTransfer.class);
+        startActivity(intent);
+    }
 }

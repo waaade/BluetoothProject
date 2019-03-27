@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -23,6 +26,7 @@
         <activity android:name=".ChatActivity" />
         <activity android:name=".BluetoothChat" />
         <activity android:name=".DeviceListActivity" />
+        <activity android:name=".FileTransfer" android:exported="true" />
     </application>
 
 </manifest>
