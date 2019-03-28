@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
@@ -185,6 +186,9 @@ public class FileTransfer extends AppCompatActivity {
 
     public static String getPath(final Context context, final Uri uri) {
         final boolean isKitKatOrAbove = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
 
         // DocumentProvider
         if (isKitKatOrAbove && DocumentsContract.isDocumentUri(context, uri)) {
