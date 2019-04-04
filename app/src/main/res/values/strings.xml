@@ -7,8 +7,11 @@
 
     <!-- Buttons in MainActivity -->
     <string name="iconLabelChat">Chat</string>
+    <string name="description_chat">Launches chat.</string>
     <string name="iconLabelFile">Send File</string>
+    <string name="description_file">Lets you send a file.</string>
     <string name="iconLabelImage">Images</string>
+    <string name="description_image">Lets you share images.</string>
 
     <!--  BluetoothChat -->
     <string name="send">Send</string>
