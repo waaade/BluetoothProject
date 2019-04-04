@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BluetoothProject</string>
+    <string name="app_name">BlueNotes</string>
     <string name="toolbarTitle">Android Bluetooth Example</string>
     <string name="openbt">Open Bluetooth</string>
     <string name="makeVisible">Make Bluetooth Visible</string>
