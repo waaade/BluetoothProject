@@ -1,16 +1,17 @@
 package androidRecyclerView;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 public class Image {
 
     protected int id;
-    protected Uri uri;
+    protected Bitmap bm;
     protected String senderName;
 
-    public Image(int id, Uri uri, String senderName) {
+    public Image(int id, Bitmap bm, String senderName) {
         this.id = id;
-        this.uri = uri;
+        this.bm = bm;
         this.senderName = senderName;
     }
 
@@ -22,12 +23,12 @@ public class Image {
         this.senderName = senderName;
     }
 
-    public Uri getUri() {
-        return uri;
+    public Bitmap getBitmap() {
+        return bm;
     }
 
-    public void setUri(Uri uri) {
-        this.uri = uri;
+    public void setBitMap(Bitmap bm) {
+        this.bm = bm;
     }
 
     public int getId() {

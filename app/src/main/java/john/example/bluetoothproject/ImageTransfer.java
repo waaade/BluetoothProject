@@ -7,10 +7,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
-import android.os.ParcelFileDescriptor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -20,16 +18,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.ByteArrayOutputStream;
-import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 import androidRecyclerView.ImageAdapter;
 
 /**
@@ -66,7 +60,7 @@ public class ImageTransfer extends AppCompatActivity {
     private String mConnectedDeviceName = null;
 
     // Member object for the chat services
-    private BluetoothChatService mChatService = null;
+    private BluetoothDataService mChatService = null;
 
     public Uri previewImage = null;
     public int counter = 0;
@@ -117,6 +111,10 @@ public class ImageTransfer extends AppCompatActivity {
         }
     }
 
+    /**
+     * Properly sets up the chat and listens for the send button and calls the proper
+     * function when the button is pushed
+     */
     private void setupChat() {
         Button mSendButton = findViewById(R.id.send_button);
         mSendButton.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +124,7 @@ public class ImageTransfer extends AppCompatActivity {
         });
 
         // Initialize the BluetoothChatService to perform bluetooth connections
-        mChatService = new BluetoothChatService(this, mHandler);
+        mChatService = new BluetoothDataService(this, mHandler);
     }
 
     @Override
@@ -197,7 +195,7 @@ public class ImageTransfer extends AppCompatActivity {
                 if (resultCode == Activity.RESULT_OK) {
                     // Get the device MAC address
                     String address = resultData.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-                    // Get the BLuetoothDevice object
+                    // Get the BluetoothDevice object
                     BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
                     // Attempt to connect to the device
                     mChatService.connect(device);
@@ -220,17 +218,18 @@ public class ImageTransfer extends AppCompatActivity {
             // Instead, a URI to that document will be contained in the return intent
             // provided to this method as a parameter.
             // Pull that URI using resultData.getData().
-            //Uri uri = null;
             if (resultData != null) {
                 previewImage = resultData.getData();
                 Log.i(TAG, "Uri: " + previewImage.toString());
-                //new getBitmapFromUri().execute(uri);
                 ImageView iv = findViewById(R.id.image);
                 iv.setImageURI(previewImage);
             }
         }
     }
 
+    /**
+     * Sends the image that is being previewed to another phone via bluetooth
+     */
     public void sendImage() {
 
         ImageView iv = findViewById(R.id.image);
@@ -247,18 +246,33 @@ public class ImageTransfer extends AppCompatActivity {
             {
                 InputStream inputStream = getContentResolver().openInputStream(previewImage);
                 byte[] inputData = getBytes(inputStream);
+
+                //resize data to under 1024 bytes to send over bluetooth
+                Log.d(TAG, "original size = " + inputData.length);
+                Bitmap bm = decodeSampledBitmapFromByte(inputData, 18, 18);
+                ByteArrayOutputStream blob = new ByteArrayOutputStream();
+                bm.compress(Bitmap.CompressFormat.PNG, 0 /* Ignored for PNGs */, blob);
+                inputData = blob.toByteArray();
+                Log.d(TAG, "shortened size = " + inputData.length);
+
+                //send data
                 mChatService.write(inputData);
-                iv.setImageURI(null);
             } catch (Exception e) {
                 Log.i(TAG, "Error sending image");
             }
         }
-        mAdapter.notifyDataSetChanged();
-        imageList.add(new androidRecyclerView.Image(counter++, previewImage, "Me"));
+        Log.i(TAG, "previewImage uri: " + previewImage.toString());
         previewImage = null;
         iv.setImageURI(null);
     }
 
+    /**
+     * Used to convert a uri to a byte array. Uri must first be convert to an  inputStream
+     *
+     * @param inputStream
+     * @return
+     * @throws IOException
+     */
     public byte[] getBytes(InputStream inputStream) throws IOException {
         ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
         int bufferSize = 1024;
@@ -271,23 +285,87 @@ public class ImageTransfer extends AppCompatActivity {
         return byteBuffer.toByteArray();
     }
 
+    /**
+     * Determines how much bigger a bitmap is that what is needs to be
+     * in order to fit it within the parameters. Works in powers of 2
+     *
+     * @param options
+     * @param reqWidth max width
+     * @param reqHeight max height
+     * @return the bitmap is this many times bigger than it needs to be
+     */
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
+
+    /**
+     * Convert a byte array to a bitmap that is within the parameters
+     *
+     * @param buf byte array to be convert to bitmap
+     * @param reqWidth max width of image
+     * @param reqHeight max height of image
+     * @return created bitmap
+     */
+    public static Bitmap decodeSampledBitmapFromByte(byte[] buf, int reqWidth,
+                                                         int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeByteArray(buf, 0, buf.length, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeByteArray(buf, 0, buf.length, options);
+    }
+
+    /**
+     * This handles all of the information that is being received from
+     * BluetoothDataService and displays info to UI
+     */
     private final Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MESSAGE_WRITE:
                     byte[] writeBuf = (byte[]) msg.obj;
-                    // construct a string from the buffer
-                    String writeMessage = new String(writeBuf);
+                    // construct a bitmap from the buffer
+                    Bitmap writeBm = decodeSampledBitmapFromByte(writeBuf, 200, 200);
                     mAdapter.notifyDataSetChanged();
-                    imageList.add(new androidRecyclerView.Message(counter++, writeMessage, "Me"));
+                    imageList.add(new androidRecyclerView.Image(counter++, Bitmap.createScaledBitmap(writeBm, 200, 200, true), "Me"));
                     break;
                 case MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
-                    // construct a string from the valid bytes in the buffer
-                    String readMessage = new String(readBuf, 0, msg.arg1);
+                    // construct a bitmap from the valid bytes in the buffer
+                    Log.i(TAG, "size = " + readBuf.length);
+                    //ensures bitmap is within readable size
+                    Bitmap readBm = decodeSampledBitmapFromByte(readBuf, 200, 200);
                     mAdapter.notifyDataSetChanged();
-                    imageList.add(new androidRecyclerView.Message(counter++, readMessage, mConnectedDeviceName));
+                    //if bitmap is too small it will convert it to a viewable size and
+                    //insert it
+                    imageList.add(new androidRecyclerView.Image(counter++, Bitmap.createScaledBitmap(readBm, 200, 200, true), mConnectedDeviceName));
                     Log.d(TAG, "Successful received image");
                     break;
                 case MESSAGE_DEVICE_NAME:
@@ -304,11 +382,19 @@ public class ImageTransfer extends AppCompatActivity {
         }
     };
 
+    /**
+     * Starts DeviceListActivity in order to connect to another phone
+     * @param v
+     */
     public void connect(View v) {
         Intent serverIntent = new Intent(this, DeviceListActivity.class);
         startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
     }
 
+    /**
+     * Makes a the phone discoverable to other phones via bluetooth
+     * @param v
+     */
     public void discoverable(View v) {
         ensureDiscoverable();
     }
