@@ -4,6 +4,8 @@
     <string name="openbt">Open Bluetooth</string>
     <string name="makeVisible">Make Bluetooth Visible</string>
     <string name="findDevices">Find Devices</string>
+    <string name="iconLabelChat">Chat</string>
+    <string name="iconLabelFile">Send File</string>
 
     <!--  BluetoothChat -->
     <string name="send">Send</string>
