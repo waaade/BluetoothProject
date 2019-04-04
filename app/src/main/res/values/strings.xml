@@ -4,6 +4,8 @@
     <string name="openbt">Open Bluetooth</string>
     <string name="makeVisible">Make Bluetooth Visible</string>
     <string name="findDevices">Find Devices</string>
+
+    <!-- Buttons in MainActivity -->
     <string name="iconLabelChat">Chat</string>
     <string name="iconLabelFile">Send File</string>
     <string name="iconLabelImage">Images</string>
