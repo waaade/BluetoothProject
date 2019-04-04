@@ -6,6 +6,7 @@
     <string name="findDevices">Find Devices</string>
     <string name="iconLabelChat">Chat</string>
     <string name="iconLabelFile">Send File</string>
+    <string name="iconLabelImage">Images</string>
 
     <!--  BluetoothChat -->
     <string name="send">Send</string>
