@@ -249,10 +249,15 @@ public class ImageTransfer extends AppCompatActivity {
 
                 //resize data to under 1024 bytes to send over bluetooth
                 Log.d(TAG, "original size = " + inputData.length);
-                Bitmap bm = decodeSampledBitmapFromByte(inputData, 18, 18);
-                ByteArrayOutputStream blob = new ByteArrayOutputStream();
-                bm.compress(Bitmap.CompressFormat.PNG, 0 /* Ignored for PNGs */, blob);
-                inputData = blob.toByteArray();
+                Bitmap bm = null;
+                for(int size = 25; inputData.length > 1024; size = size - 1)
+                {
+                    bm = decodeSampledBitmapFromByte(inputData, size, size);
+                    ByteArrayOutputStream blob = new ByteArrayOutputStream();
+                    bm.compress(Bitmap.CompressFormat.PNG, 0 /* Ignored for PNGs */, blob);
+                    inputData = blob.toByteArray();
+                    Log.i(TAG, "shortened length = " + size);
+                }
                 Log.d(TAG, "shortened size = " + inputData.length);
 
                 //send data
@@ -361,6 +366,8 @@ public class ImageTransfer extends AppCompatActivity {
                     // construct a bitmap from the valid bytes in the buffer
                     Log.i(TAG, "size = " + readBuf.length);
                     //ensures bitmap is within readable size
+//                    Bitmap readBm = BitmapFactory.decodeByteArray(readBuf, 0, readBuf.length);
+//                    Bitmap read = Bitmap.createScaledBitmap(readBm, 200, 200, true);
                     Bitmap readBm = decodeSampledBitmapFromByte(readBuf, 200, 200);
                     mAdapter.notifyDataSetChanged();
                     //if bitmap is too small it will convert it to a viewable size and
