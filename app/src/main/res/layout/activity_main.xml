@@ -11,11 +11,16 @@
         android:layout_width="92dp"
         android:layout_height="61dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="64dp"
         android:layout_marginBottom="24dp"
         android:contentDescription="@string/description_chat"
         android:onClick="launchChat"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintEnd_toStartOf="@+id/button_file"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline4"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ic_chat" />
 
     <android.support.constraint.Guideline
@@ -24,13 +29,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="633dp" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="26dp" />
 
     <TextView
         android:id="@+id/textView"
@@ -44,23 +42,21 @@
         app:layout_constraintStart_toStartOf="@+id/button_chat"
         app:layout_constraintTop_toTopOf="@+id/button_chat" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="26dp" />
-
     <ImageButton
         android:id="@+id/button_file"
         android:layout_width="92dp"
         android:layout_height="61dp"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="64dp"
         android:layout_marginBottom="24dp"
         android:contentDescription="@string/description_file"
         android:onClick="launchTransferFile"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toStartOf="@+id/button_image"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button_chat"
+        app:layout_constraintTop_toTopOf="@+id/guideline4"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ic_file" />
 
     <TextView
@@ -78,15 +74,18 @@
         android:id="@+id/button_image"
         android:layout_width="92dp"
         android:layout_height="61dp"
-        android:layout_marginStart="32dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="64dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="24dp"
         android:contentDescription="@string/description_image"
         android:onClick="launchImages"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintEnd_toStartOf="@+id/guideline3"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button_file"
+        app:layout_constraintTop_toTopOf="@+id/guideline4"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ic_image" />
 
     <TextView
@@ -112,5 +111,12 @@
         app:layout_constraintHorizontal_bias="0.479"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="439dp" />
 
 </android.support.constraint.ConstraintLayout>
