@@ -58,6 +58,7 @@ public class FileTransfer extends AppCompatActivity {
                 requestPermissions(INITIAL_PERMS, INITIAL_REQUEST);
             }
         }
+        getFile();
     }
 
     @Override
@@ -92,7 +93,13 @@ public class FileTransfer extends AppCompatActivity {
         }
     }
 
-    public void getFile(View v) {
+    public void getFile() {
+        Intent mediaIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        mediaIntent.setType("*/*"); //set mime type as per requirement
+        startActivityForResult(mediaIntent, 1001);
+    }
+
+    public void getFile(View view) {
         Intent mediaIntent = new Intent(Intent.ACTION_GET_CONTENT);
         mediaIntent.setType("*/*"); //set mime type as per requirement
         startActivityForResult(mediaIntent, 1001);
