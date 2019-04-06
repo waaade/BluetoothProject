@@ -1,0 +1,32 @@
+Messaging Test
+1. Click the Make Discoverable app check to make sure Toast message pops up
+2. Click the Connect a Device button ensure it takes you to another screen
+    a. Click the Scan for Devices button and ensure another list is displayed.
+    b. Click on another phone check that it takes you back to the main screen and that a toast message pops up ensuring that you connected to another device
+3. Click the on the text box and ensure keyboard is popping up and the text that you type on the keyboard is being entered into the textbox
+4. Click the Send Image button check to make sure that the text appears on the right side of the screen in a green rectangle.
+5. Without connecting to another device click the send button, a Toast message should pop up informing you that you are not connected to a device
+6. Have another phone send an message, the received message should be displayed on the left side of the screen in a purple rectangle.
+
+Image Sharing Test
+1. Click the Make Discoverable app check to make sure Toast message pops up
+2. Click the Connect a Device button ensure it takes you to another screen
+    a. Click the Scan for Devices button and ensure another list is displayed.
+    b. Click on another phone check that it takes you back to the main screen and that a toast message pops up ensuring that you connected to another device
+3. Click the Load Image button, check that it takes you to the list of images on the device
+    a. Select an image and check that you return to the main screen and that the selected image pops up on the green box on the bottom
+4. Click the Send Image button check to make sure that the sent image appears on the right side of the screen in a green rectangle.
+5. Without connecting to another device click the send image button, a Toast message should pop up informing you that you are not connected to a device
+6. Without selecting an image click the send image button, a Toast message should pop up informing you need to select an image
+7. Have another phone send an image, the received image should be displayed on the left side of the screen in a purple rectangle.
+
+File Transfer Test
+1. Click the Send Files button on the main activity to enter the document content.
+2. Select a file from the content that you return to the prompting activity and it will ensure if you want to send the particular chosen file or not.
+    a. Click the Red Cancel Button to allow you picking another file from the content.
+    b. Click the Green Okay Button to Send the chosen file, a toast will pop out if the Bluetooth is not turn on, and it should turn on the Bluetooth
+       for you automatically.
+3. Once clicked the Green Okay button, there will be a prompt asking you if you want your device  to be discoverable for 300s.
+4. Click allow, a list of other devices should appear. Pick the device that you wish to send the file.
+5. File sent, go ahead and make sure to receive the file on the other device.
+6. Once received, you may open and check the file.
